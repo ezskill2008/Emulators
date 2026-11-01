@@ -1,0 +1,9 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Chip8/Chip8.vcxproj" Id="680e107a-4c64-4d19-a8ef-56d1c9473d63" />
+  <Project Path="GameBoy(DMG)/GameBoy(DMG).vcxproj" Id="c244f9be-0a2b-4bfc-b89f-684371f4f767" />
+  <Project Path="NES/NES.vcxproj" Id="60777481-0fd5-44bf-a525-e584a5407776" />
+</Solution>

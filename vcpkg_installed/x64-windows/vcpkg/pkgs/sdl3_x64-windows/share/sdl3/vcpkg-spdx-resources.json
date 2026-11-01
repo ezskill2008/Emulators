@@ -1,0 +1,19 @@
+{
+  "packages": [
+{
+  "SPDXID" : "SPDXRef-resource-0",
+  "checksums" : 
+  [
+    {
+      "algorithm" : "SHA512",
+      "checksumValue" : "fc0a55ca01c32f613b9cd8c6cffad17ee0855ee542f03fa455632043c99a0a259599557a46c7c636032444260e64476867d9af43a1da689837f99c22942cd863"
+    }
+  ],
+  "copyrightText" : "NOASSERTION",
+  "downloadLocation" : "git+https://github.com/libsdl-org/SDL@release-3.4.12",
+  "licenseConcluded" : "NOASSERTION",
+  "licenseDeclared" : "NOASSERTION",
+  "name" : "libsdl-org/SDL"
+}
+  ]
+}
