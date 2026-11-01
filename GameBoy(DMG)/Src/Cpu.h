@@ -31,10 +31,14 @@ enum inst_type : uint8_t {
 
 enum addr_mode : uint8_t {
 	adm_none = 0,
-	adm_r8_r8,
+	adm_r,
+	adm_r_r,
+	adm_mr,
+	adm_mr_r,
+	adm_n8,
 	adm_n16,
-	adm_r16_r8,
-	adm_r16_n16,
+	adm_r_n8,
+	adm_r_n16,
 };
 
 enum reg_type : uint8_t {
@@ -103,20 +107,11 @@ typedef struct sm83 {
 void cpu_step(
 	sm83& c);
 
-uint8_t cpu_read_r8(
+uint16_t cpu_read_reg(
 	const sm83& c,
 	reg_type r);
 
-uint16_t cpu_read_r16(
-	const sm83& c,
-	reg_type r);
-
-void cpu_write_r8(
-	sm83& c,
-	reg_type r,
-	uint8_t value);
-
-void cpu_write_r16(
+void cpu_write_reg(
 	sm83& c,
 	reg_type r,
 	uint16_t value);

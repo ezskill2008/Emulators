@@ -1,9 +1,9 @@
 #include <Cpu.h>
 
 constexpr static instruction instrs[256]{
-	{ inst_nop, adm_none, reg_none },		//0x00 NOOP - 4
-	{ inst_ld, adm_r16_n16, reg_bc },		//0x01 LD BC, n16 - 12
-	{ inst_ld, adm_r16_r8, reg_bc, reg_a},	//0x02 LD [BC], A - 8
+	{ inst_nop, adm_none, reg_none },		//0x00 NOOP			- 4
+	{ inst_ld, adm_r_n16, reg_bc },			//0x01 LD BC, n16	- 12
+	{ inst_ld, adm_mr_r, reg_bc, reg_a },	//0x02 LD [BC], A	- 8
 	{},//0x03
 	{},//0x04
 	{},//0x05
@@ -196,7 +196,7 @@ constexpr static instruction instrs[256]{
 	{},//0xc0
 	{},//0xc1
 	{},//0xc2
-	{ inst_jp, adm_n16, reg_none, reg_none, cond_nz },//0xc3
+	{ inst_jp, adm_n16, reg_none, reg_none, cond_nz },	//0xc3 JP a16	- 16
 	{},//0xc4
 	{},//0xc5
 	{},//0xc6
@@ -261,15 +261,24 @@ constexpr static instruction instrs[256]{
 
 bool
 cpu_cond(sm83& c) {
-	//bool z{ c.reg.f & 0x80 };
-	//bool c{ c.reg.f & 0x10 };
+	bool bz{ (c.reg.f & 0x80) != 0 };
+	bool bc{ (c.reg.f & 0x10) != 0 };
 
-	return true;
+	switch (c.curr_inst.cond) {
+	case cond_c:	return  bc;
+	case cond_nc:	return !bc;
+	case cond_z:	return  bz;
+	case cond_nz:	return !bz;
+	}
+
+	return false;
 }
 
 void
 cpu_jp(sm83& c) {
-
+	if (cpu_cond(c)) {
+		cpu_write_reg(c, reg_pc, c.fetched_data);
+	}
 }
 
 void
@@ -279,10 +288,20 @@ cpu_step(
 	c.curr_inst = instrs[c.curr_opcode];
 	c.mem_dest = 0;
 	c.dest_is_mem = false;
+
+	switch (c.curr_inst.mode) {
+	case adm_n16: {
+		uint8_t lo{ bus_read(c.b, c.reg.pc++) };
+		uint8_t hi{ bus_read(c.b, c.reg.pc++) };
+
+		c.fetched_data = lo | (hi << 8);
+	} break;
+	default: return;
+	}
 }
 
-uint8_t
-cpu_read_r8(
+uint16_t
+cpu_read_reg(
 	const sm83& c,
 	reg_type r) {
 	switch (r) {
@@ -294,15 +313,6 @@ cpu_read_r8(
 	case reg_e: return (c.reg.e & 0xff);
 	case reg_h: return (c.reg.h & 0xff);
 	case reg_l: return (c.reg.l & 0xff);
-	default: return 0;
-	}
-}
-
-uint16_t
-cpu_read_r16(
-	const sm83& c,
-	reg_type r) {
-	switch (r) {
 	case reg_af: return ((uint16_t)c.reg.a) << 8 | (uint16_t)c.reg.f;
 	case reg_bc: return ((uint16_t)c.reg.b) << 8 | (uint16_t)c.reg.c;
 	case reg_de: return ((uint16_t)c.reg.d) << 8 | (uint16_t)c.reg.e;
@@ -314,29 +324,19 @@ cpu_read_r16(
 }
 
 void
-cpu_write_r8(
-	sm83& c,
-	reg_type r,
-	uint8_t value) {
-	switch (r) {
-	case reg_a: { c.reg.a = value; } break;
-	case reg_f: { c.reg.f = value; } break;
-	case reg_b: { c.reg.b = value; } break;
-	case reg_c: { c.reg.c = value; } break;
-	case reg_d: { c.reg.d = value; } break;
-	case reg_e: { c.reg.e = value; } break;
-	case reg_h: { c.reg.h = value; } break;
-	case reg_l: { c.reg.l = value; } break;
-	default: return;
-	}
-}
-
-void
-cpu_write_r16(
+cpu_write_reg(
 	sm83& c,
 	reg_type r,
 	uint16_t value) {
 	switch (r) {
+	case reg_a: { c.reg.a = value & 0xff; } break;
+	case reg_f: { c.reg.f = value & 0xf0; } break;
+	case reg_b: { c.reg.b = value & 0xff; } break;
+	case reg_c: { c.reg.c = value & 0xff; } break;
+	case reg_d: { c.reg.d = value & 0xff; } break;
+	case reg_e: { c.reg.e = value & 0xff; } break;
+	case reg_h: { c.reg.h = value & 0xff; } break;
+	case reg_l: { c.reg.l = value & 0xff; } break;
 	case reg_af: { c.reg.a = (value & 0xff00) >> 8; c.reg.f = value & 0xf0; } break;
 	case reg_bc: { c.reg.b = (value & 0xff00) >> 8; c.reg.c = value & 0xff; } break;
 	case reg_de: { c.reg.d = (value & 0xff00) >> 8; c.reg.e = value & 0xff; } break;
