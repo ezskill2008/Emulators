@@ -11,7 +11,7 @@ ca_load_cartridge(
 	if (!file_size)
 		return false;
 
-	std::ifstream ifile{ path, std::ios::in };
+	std::ifstream ifile{ path, std::ios::in | std::ios::binary };
 	c.memory = std::make_unique<uint8_t[]>(file_size);
 	ifile.read((char*)c.memory.get(), file_size);
 	ifile.close();

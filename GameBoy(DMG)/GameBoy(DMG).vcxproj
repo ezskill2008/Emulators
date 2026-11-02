@@ -147,13 +147,17 @@
     <ClCompile Include="Src\Bus.cpp" />
     <ClCompile Include="Src\Cartridge.cpp" />
     <ClCompile Include="Src\Cpu.cpp" />
+    <ClCompile Include="Src\Inst.cpp" />
     <ClCompile Include="Src\Main.cpp" />
+    <ClCompile Include="Src\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Bus.h" />
     <ClInclude Include="Src\Cartridge.h" />
     <ClInclude Include="Src\Common.h" />
     <ClInclude Include="Src\Cpu.h" />
+    <ClInclude Include="Src\Inst.h" />
+    <ClInclude Include="Src\Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

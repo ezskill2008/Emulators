@@ -1,263 +1,5 @@
 #include <Cpu.h>
-
-constexpr static instruction instrs[256]{
-	{ inst_nop, adm_none, reg_none },		//0x00 NOOP			- 4
-	{ inst_ld, adm_r_n16, reg_bc },			//0x01 LD BC, n16	- 12
-	{ inst_ld, adm_mr_r, reg_bc, reg_a },	//0x02 LD [BC], A	- 8
-	{},//0x03
-	{},//0x04
-	{},//0x05
-	{},//0x06
-	{},//0x07
-	{},//0x08
-	{},//0x09
-	{},//0x0a
-	{},//0x0b
-	{},//0x0c
-	{},//0x0d
-	{},//0x0e
-	{},//0x0f
-	{},//0x10
-	{},//0x11
-	{},//0x12
-	{},//0x13
-	{},//0x14
-	{},//0x15
-	{},//0x16
-	{},//0x17
-	{},//0x18
-	{},//0x19
-	{},//0x1a
-	{},//0x1b
-	{},//0x1c
-	{},//0x1d
-	{},//0x1e
-	{},//0x1f
-	{},//0x20
-	{},//0x21
-	{},//0x22
-	{},//0x23
-	{},//0x24
-	{},//0x25
-	{},//0x26
-	{},//0x27
-	{},//0x28
-	{},//0x29
-	{},//0x2a
-	{},//0x2b
-	{},//0x2c
-	{},//0x2d
-	{},//0x2e
-	{},//0x2f
-	{},//0x30
-	{},//0x31
-	{},//0x32
-	{},//0x33
-	{},//0x34
-	{},//0x35
-	{},//0x36
-	{},//0x37
-	{},//0x38
-	{},//0x39
-	{},//0x3a
-	{},//0x3b
-	{},//0x3c
-	{},//0x3d
-	{},//0x3e
-	{},//0x3f
-	{},//0x40
-	{},//0x41
-	{},//0x42
-	{},//0x43
-	{},//0x44
-	{},//0x45
-	{},//0x46
-	{},//0x47
-	{},//0x48
-	{},//0x49
-	{},//0x4a
-	{},//0x4b
-	{},//0x4c
-	{},//0x4d
-	{},//0x4e
-	{},//0x4f
-	{},//0x50
-	{},//0x51
-	{},//0x52
-	{},//0x53
-	{},//0x54
-	{},//0x55
-	{},//0x56
-	{},//0x57
-	{},//0x58
-	{},//0x59
-	{},//0x5a
-	{},//0x5b
-	{},//0x5c
-	{},//0x5d
-	{},//0x5e
-	{},//0x5f
-	{},//0x60
-	{},//0x61
-	{},//0x62
-	{},//0x63
-	{},//0x64
-	{},//0x65
-	{},//0x66
-	{},//0x67
-	{},//0x68
-	{},//0x69
-	{},//0x6a
-	{},//0x6b
-	{},//0x6c
-	{},//0x6d
-	{},//0x6e
-	{},//0x6f
-	{},//0x70
-	{},//0x71
-	{},//0x72
-	{},//0x73
-	{},//0x74
-	{},//0x75
-	{},//0x76
-	{},//0x77
-	{},//0x78
-	{},//0x79
-	{},//0x7a
-	{},//0x7b
-	{},//0x7c
-	{},//0x7d
-	{},//0x7e
-	{},//0x7f
-	{},//0x80
-	{},//0x81
-	{},//0x82
-	{},//0x83
-	{},//0x84
-	{},//0x85
-	{},//0x86
-	{},//0x87
-	{},//0x88
-	{},//0x89
-	{},//0x8a
-	{},//0x8b
-	{},//0x8c
-	{},//0x8d
-	{},//0x8e
-	{},//0x8f
-	{},//0x90
-	{},//0x91
-	{},//0x92
-	{},//0x93
-	{},//0x94
-	{},//0x95
-	{},//0x96
-	{},//0x97
-	{},//0x98
-	{},//0x99
-	{},//0x9a
-	{},//0x9b
-	{},//0x9c
-	{},//0x9d
-	{},//0x9e
-	{},//0x9f
-	{},//0xa0
-	{},//0xa1
-	{},//0xa2
-	{},//0xa3
-	{},//0xa4
-	{},//0xa5
-	{},//0xa6
-	{},//0xa7
-	{},//0xa8
-	{},//0xa9
-	{},//0xaa
-	{},//0xab
-	{},//0xac
-	{},//0xad
-	{},//0xae
-	{},//0xaf
-	{},//0xb0
-	{},//0xb1
-	{},//0xb2
-	{},//0xb3
-	{},//0xb4
-	{},//0xb5
-	{},//0xb6
-	{},//0xb7
-	{},//0xb8
-	{},//0xb9
-	{},//0xba
-	{},//0xbb
-	{},//0xbc
-	{},//0xbd
-	{},//0xbe
-	{},//0xbf
-	{},//0xc0
-	{},//0xc1
-	{},//0xc2
-	{ inst_jp, adm_n16, reg_none, reg_none, cond_nz },	//0xc3 JP a16	- 16
-	{},//0xc4
-	{},//0xc5
-	{},//0xc6
-	{},//0xc7
-	{},//0xc8
-	{},//0xc9
-	{},//0xca
-	{},//0xcb
-	{},//0xcc
-	{},//0xcd
-	{},//0xce
-	{},//0xcf
-	{},//0xd0
-	{},//0xd1
-	{},//0xd2
-	{},//0xd3
-	{},//0xd4
-	{},//0xd5
-	{},//0xd6
-	{},//0xd7
-	{},//0xd8
-	{},//0xd9
-	{},//0xda
-	{},//0xdb
-	{},//0xdc
-	{},//0xdd
-	{},//0xde
-	{},//0xdf
-	{},//0xe0
-	{},//0xe1
-	{},//0xe2
-	{},//0xe3
-	{},//0xe4
-	{},//0xe5
-	{},//0xe6
-	{},//0xe7
-	{},//0xe8
-	{},//0xe9
-	{},//0xea
-	{},//0xeb
-	{},//0xec
-	{},//0xed
-	{},//0xee
-	{},//0xef
-	{},//0xf0
-	{},//0xf1
-	{},//0xf2
-	{},//0xf3
-	{},//0xf4
-	{},//0xf5
-	{},//0xf6
-	{},//0xf7
-	{},//0xf8
-	{},//0xf9
-	{},//0xfa
-	{},//0xfb
-	{},//0xfc
-	{},//0xfd
-	{},//0xfe
-	{}//0xff
-};
+#include <Timer.h>
 
 bool
 cpu_cond(sm83& c) {
@@ -275,9 +17,113 @@ cpu_cond(sm83& c) {
 }
 
 void
+cpu_nop(sm83& c) {//FINAL
+	UNREFERENCED_PARAMETER(c);
+	timer_tcycles(4);
+}
+
+void
+cpu_ld(sm83& c) {
+	if (c.dest_is_mem) {
+		uint16_t addr{ (uint16_t)(c.mem_dest + c.curr_inst.mem_adj) };
+		bus_write(c.b, addr, (uint8_t)c.fetched_data);
+
+		return;
+	}
+
+	cpu_write_reg(c, c.curr_inst.r1, c.fetched_data);
+}
+
+void
+cpu_dec(sm83& c) {
+	if (c.dest_is_mem) {
+		uint8_t value{ bus_read(c.b, c.mem_dest) };
+		--value;
+		bus_write(c.b, c.mem_dest, value);
+
+		BIT_SET(c.reg.f, 7, (value == 0));
+		BIT_SET(c.reg.f, 6, 1);
+		BIT_SET(c.reg.f, 5, ((value & 0x0F) == 0xF));
+	}
+	else if(cpu_is_r16(c.curr_inst.r1)) {
+		uint16_t value{ c.fetched_data };
+		--value;
+		cpu_write_reg(c, c.curr_inst.r1, value);
+	}
+	else {
+		uint8_t value{ (uint8_t)c.fetched_data };
+		--value;
+		cpu_write_reg(c, c.curr_inst.r1, value);
+
+		BIT_SET(c.reg.f, 7, (value == 0));
+		BIT_SET(c.reg.f, 6, 1);
+		BIT_SET(c.reg.f, 5, ((value & 0x0F) == 0xF));
+	}
+}
+
+void
+cpu_xor(sm83& c) {
+	uint16_t v{ cpu_read_reg(c, c.curr_inst.r1) };
+	v ^= c.fetched_data;
+	cpu_write_reg(c, reg_f, (v == 0) ? 0x80 : 0x00);
+}
+
+void
 cpu_jp(sm83& c) {
-	if (cpu_cond(c)) {
+	if (c.curr_inst.cond == cond_none || cpu_cond(c)) {
 		cpu_write_reg(c, reg_pc, c.fetched_data);
+	}
+	else {
+	}
+}
+
+void
+cpu_jr(sm83& c) {
+	if (c.curr_inst.cond == cond_none || cpu_cond(c)) {
+		uint16_t pc{ cpu_read_reg(c, reg_pc) };
+		pc += (int8_t)c.fetched_data;
+		cpu_write_reg(c, reg_pc, pc);
+	}
+}
+
+void
+cpu_fetch(sm83& c) {
+	c.dest_is_mem = false;
+	c.mem_dest = 0;
+	c.fetched_data = 0;
+
+	switch (c.curr_inst.mode) {
+	case adm_r: {
+		c.fetched_data = cpu_read_reg(c, c.curr_inst.r1);
+	} break;
+	case adm_r_r: {
+		c.fetched_data = cpu_read_reg(c, c.curr_inst.r2);
+	} break;
+	case adm_mr: {
+		c.mem_dest = cpu_read_reg(c, c.curr_inst.r1);
+		c.dest_is_mem = true;
+		c.fetched_data = bus_read(c.b, c.mem_dest);
+	} break;
+	case adm_mr_r: {
+		c.mem_dest = cpu_read_reg(c, c.curr_inst.r1);
+		c.dest_is_mem = true;
+		c.fetched_data = cpu_read_reg(c, c.curr_inst.r2);
+	} break;
+	case adm_r_mr: {
+		c.fetched_data = bus_read(c.b, cpu_read_reg(c, c.curr_inst.r2));
+	} break;
+	case adm_r_n8:
+	case adm_n8: {
+		c.fetched_data = bus_read(c.b, c.reg.pc++);
+	} break;
+	case adm_n16:
+	case adm_r_n16: {
+		uint8_t lo{ bus_read(c.b, c.reg.pc++) };
+		uint8_t hi{ bus_read(c.b, c.reg.pc++) };
+
+		c.fetched_data = lo | (hi << 8);
+	} break;
+	default: return;
 	}
 }
 
@@ -285,18 +131,19 @@ void
 cpu_step(
 	sm83& c) {
 	c.curr_opcode = bus_read(c.b, c.reg.pc++);
-	c.curr_inst = instrs[c.curr_opcode];
-	c.mem_dest = 0;
-	c.dest_is_mem = false;
+	c.curr_inst = inst_from_opcode(c.curr_opcode);
 
-	switch (c.curr_inst.mode) {
-	case adm_n16: {
-		uint8_t lo{ bus_read(c.b, c.reg.pc++) };
-		uint8_t hi{ bus_read(c.b, c.reg.pc++) };
+	cpu_fetch(c);
 
-		c.fetched_data = lo | (hi << 8);
-	} break;
-	default: return;
+	switch (c.curr_inst.type) {
+	case inst_nop:				break;
+	case inst_ld:	cpu_ld(c);	break;
+	case inst_dec:	cpu_dec(c);	break;
+	case inst_xor:	cpu_xor(c);	break;
+	case inst_jp:	cpu_jp(c);	break;
+	case inst_jr:	cpu_jr(c);	break;
+	default:
+		break;
 	}
 }
 
@@ -344,5 +191,17 @@ cpu_write_reg(
 	case reg_sp: { c.reg.sp = value; } break;
 	case reg_pc: { c.reg.pc = value; } break;
 	default: return;
+	}
+}
+
+void
+cpu_ss_cond(
+	std::stringstream& ss,
+	cond_type c) {
+	switch (c) {
+	case cond_c:  ss << "C";  break;
+	case cond_nc: ss << "NC"; break;
+	case cond_z:  ss << "Z";  break;
+	case cond_nz: ss << "NZ"; break;
 	}
 }
